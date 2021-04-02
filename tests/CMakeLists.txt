@@ -1,0 +1,3 @@
+include_directories(../src/)
+add_executable(program_shell_debug main.cpp)
+target_link_libraries(program_shell_debug program_shell)
