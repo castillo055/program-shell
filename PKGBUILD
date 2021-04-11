@@ -43,5 +43,5 @@ check() {
 
 package() {
 	cd "$srcdir/${pkgname%-git}"
-	cmake --install . --target program_shell
+	cmake --install . --target program_shell --prefix "$pkgdir/usr/"
 }
