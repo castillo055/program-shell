@@ -106,3 +106,24 @@ void terminal::th_function(terminal::term_stream* stream, const path_map *path, 
     sigpipe:
     delete stream;
 }
+
+terminal::term_stream& terminal::term_stream::operator<< (const std::string& output) { return transmit((void*)output.c_str(), output.size()); }
+
+terminal::term_stream& terminal::term_stream::operator>> (std::string& input) {
+    (void)input.erase();
+
+    char buf[128];
+    int len = sizeof(buf) / sizeof(char);
+
+    do {
+        bzero(buf, len);
+
+        int bytes = recv(file_decryptor, buf, len, 0);
+
+        if (bytes > 0)
+            (void)input.append(buf, len);
+    } while (buf[len-1] != '\0');
+
+
+    return *this;
+}

@@ -31,8 +31,8 @@ namespace terminal {
         explicit term_stream(int fd): file_decryptor(fd) {}
         ~term_stream() { (void)close(file_decryptor); }
 
-        inline term_stream& operator<< (const std::string& output) { return transmit((void*)output.c_str(), output.size()); }
-        inline term_stream& operator>> (std::string& input) {
+        term_stream& operator<< (const std::string& output); // { return transmit((void*)output.c_str(), output.size()); }
+        term_stream& operator>> (std::string& input); /* {
             (void)input.erase();
 
             char buf[128];
@@ -49,7 +49,7 @@ namespace terminal {
 
 
             return *this;
-        }
+        }*/
     private:
         int file_decryptor;
 
