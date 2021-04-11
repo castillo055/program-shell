@@ -10,8 +10,9 @@ namespace program_shell {
     path_map PATH;
 
     int init(unsigned short port_number);
+    void stop();
 
-    [[noreturn]] void await_connection(int socket_fd, int conn_queue_size);
+    void await_connection(int socket_fd, int conn_queue_size);
 
     void set_var(std::string name, std::string value);
 

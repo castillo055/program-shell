@@ -27,6 +27,7 @@ namespace program_shell {
     typedef std::unordered_map<std::string, command> path_map;
 
     extern int init(unsigned short port_number);
+    extern void stop();
 
     extern void set_var(std::string name, std::string value);
 

@@ -5,9 +5,12 @@
 
 using namespace std;
 
+static bool listening = false;
+static int socket_fd;
+
 int program_shell::init(unsigned short port_number) {
     // Allocate socket
-    int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (socket_fd < 0) return -1;
 
     // Set socket to be reused
@@ -23,11 +26,17 @@ int program_shell::init(unsigned short port_number) {
     if (bind(socket_fd, (const sockaddr*) &addr, sizeof(addr)) <0) return -3;
 
     // Start new thread and await connection
-    conn_listener_th = new thread([&, socket_fd]{
+    listening = true;
+    conn_listener_th = new thread([]{
         await_connection(socket_fd, 5);
     });
 
     return 0;
+}
+
+void program_shell::stop() {
+    listening = false;
+    (void)close(socket_fd);
 }
 
 void program_shell::await_connection(int socket_fd, int conn_queue_size) {
@@ -35,7 +44,7 @@ void program_shell::await_connection(int socket_fd, int conn_queue_size) {
 
     sockaddr_in cli_addr;
     socklen_t cli_addr_len = sizeof(cli_addr);
-    while (true) {
+    while (listening) {
         int conn_socket_fd = accept(socket_fd, (struct sockaddr *) &cli_addr, &cli_addr_len);
 
         if (conn_socket_fd <0) {
@@ -50,7 +59,7 @@ void program_shell::await_connection(int socket_fd, int conn_queue_size) {
         thread* th = terminal::create(conn_socket_fd, &PATH, &global_environment);
     }
 
-    close(socket_fd);
+    //(void)close(socket_fd);
 }
 
 void program_shell::set_var(string name, string value) {

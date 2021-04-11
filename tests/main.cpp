@@ -6,6 +6,8 @@
 
 #include <immintrin.h>
 #include <iostream>
+#include <unistd.h>
+
 using namespace std;
 
 int test(terminal::term_stream& stream, int argc, const char* argv[]) {
@@ -30,7 +32,12 @@ int main() <%
     program_shell::add_cmd("test", test);
 
     auto err = program_shell::init(33851);
+    cout << err << endl;
 
+    /*if (fork() == 0) {
+        program_shell::stop();
+        execv("/home/victor/.local/bin/st", {});
+    }*/
     //conn_listener_th->join();
 while(1);
     //delete conn_listener_th;
