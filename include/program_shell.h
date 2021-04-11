@@ -11,8 +11,8 @@
 namespace terminal {
     class term_stream {
     public:
-        term_stream& operator<< (const std::string& output);
-        term_stream& operator>> (std::string& input);
+        inline term_stream& operator<< (const std::string& output);
+        inline term_stream& operator>> (std::string& input);
     };
 }
 
